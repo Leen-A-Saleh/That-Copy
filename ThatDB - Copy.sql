@@ -13,6 +13,7 @@ DROP TABLE IF EXISTS focus_results;
 DROP TABLE IF EXISTS focus_tests;
 DROP TABLE IF EXISTS assessment_results;
 DROP TABLE IF EXISTS assessments;
+DROP TABLE IF EXISTS client_surveys;
 DROP TABLE IF EXISTS activity_submissions;
 DROP TABLE IF EXISTS case_activities;
 DROP TABLE IF EXISTS activities;
@@ -49,8 +50,41 @@ CREATE TABLE clients (
     gender VARCHAR(10) NULL CHECK (gender IN ('MALE', 'FEMALE')),
     date_of_birth DATE NULL,
     city VARCHAR(100) NULL,
+    treatment_type ENUM('INDIVIDUAL_THERAPY', 'COUPLES_THERAPY', 'CHILD_ADOLESCENT_BEHAVIORAL_THERAPY') NOT NULL,
+    preferred_session_type ENUM('ONLINE', 'IN_PERSON', 'BOTH') NOT NULL,
+    preferred_session_time ENUM('MORNING', 'AFTERNOON', 'EVENING', 'FLEXIBLE') NOT NULL,
     PRIMARY KEY (client_id),
     CONSTRAINT fk_client_user FOREIGN KEY (client_id) REFERENCES users (user_id) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
+
+-- ============================================================
+-- 2.1 CLIENT SURVEYS (SIGNUP SURVEY)
+-- Stores answers from Auth-pages/signuppage/signup.php
+-- ============================================================
+CREATE TABLE client_surveys (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+
+    treatment_type VARCHAR(255) NULL,
+    symptoms TEXT NULL,
+    repeated_symptoms TEXT NULL,
+    prev_therapy BOOLEAN,
+    age INT NULL,
+    nationality VARCHAR(100) NULL,
+    therapist_gender ENUM('MALE', 'FEMALE', 'NO_PREFERENCE') NOT NULL,
+    family_history ENUM('YES', 'NO') NOT NULL,
+    physical_issues ENUM('YES', 'NO') NOT NULL,
+    physical_details TEXT NULL,
+    marital_status ENUM('SINGLE', 'MARRIED', 'WIDOWED', 'DIVORCED', 'IN_RELATIONSHIP', 'SEPARATED', 'PREFER_NOT_TO_SAY') NOT NULL,
+    education_level ENUM('LESS_THAN_HIGH_SCHOOL', 'HIGH_SCHOOL','BACHELOR','MASTER','PHD','OTHER') NOT NULL
+    smoking ENUM('YES', 'NO') NOT NULL,
+    alcohol ENUM('YES', 'NO') NOT NULL,
+    drugs ENUM('YES', 'NO') NOT NULL,
+    contact_preference ENUM('WHATSAPP', 'EMAIL') NOT NULL,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_client_surveys_user FOREIGN KEY (user_id) REFERENCES users (user_id) ON DELETE CASCADE
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8mb4 COLLATE = utf8mb4_unicode_ci;
 
 -- ============================================================
