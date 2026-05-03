@@ -22,15 +22,15 @@
     <div class="header-right">
 
       <div class="brand">
-        <a href="../homepage/index.html">
+        <a href="../homepage/index.php">
           <img src="img/Frame 392 (1).png" alt="شعار ذات" class="brand-icon">
         </a>
       </div>
     </div>
 
     <div class="header-left">
-      <a href="../loginpage/login.html" class="nav-link active-login">تسجيل الدخول</a>
-      <a href="../signuppage/signup.html" class="nav-link active-login btn btn-primary">إنشاء حساب</a>
+      <a href="../Auth/loginpage/login.php" class="nav-link active-login">تسجيل الدخول</a>
+      <a href="../Auth/signuppage/signup.php" class="nav-link active-login btn btn-primary">إنشاء حساب</a>
     </div>
   </header>
 
@@ -309,7 +309,7 @@
                 </div>
               </div>
             </div>
-            <a href="../loginpage/login.html" class="card-link">اعرف المزيد</a>
+            <a href="../Auth-pages/loginpage/login.php" class="card-link">اعرف المزيد</a>
             </div>
         </article>
 
@@ -325,7 +325,7 @@
                 </div>
               </div>
             </div>
-            <a href="../loginpage/login.html" class="card-link">اعرف المزيد</a>
+            <a href="../Auth-pages/loginpage/login.php" class="card-link">اعرف المزيد</a>
           </div>
         </article>
 
@@ -341,7 +341,7 @@
                 </div>
               </div>
             </div>
-            <a href="../loginpage/login.html" class="card-link">اعرف المزيد</a>
+            <a href="../Auth-pages/loginpage/login.php" class="card-link">اعرف المزيد</a>
           </div>
         </article>
       </div>
