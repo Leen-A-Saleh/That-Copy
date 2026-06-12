@@ -309,7 +309,7 @@ async function handleSave() {
     closeModal();
     setTimeout(() => window.location.reload(), 600);
   } catch (err) {
-    alert(err.message || "حدث خطأ، يرجى المحاولة مجدداً");
+    showErrorAlert(err.message || "حدث خطأ، يرجى المحاولة مجدداً");
   }
 }
 
@@ -322,7 +322,7 @@ async function confirmDelete() {
     pendingDeleteId = null;
     setTimeout(() => window.location.reload(), 600);
   } catch (err) {
-    alert(err.message || "حدث خطأ، يرجى المحاولة مجدداً");
+    showErrorAlert(err.message || "حدث خطأ، يرجى المحاولة مجدداً");
   }
 }
 

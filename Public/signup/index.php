@@ -17,7 +17,9 @@ start_secure_session();
 
   <link rel="stylesheet" href="../../total.css">
   <link rel="stylesheet" href="style.css">
-  <script src="../../total.js"></script>
+  <!-- نظام التنبيهات SweetAlert2 + الدوال الموحّدة -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="../js/sweet-alerts.js"></script>
 </head>
 
 <body>
@@ -49,7 +51,7 @@ start_secure_session();
           <div class="progress-bar" id="progressBar"></div>
         </div>
 
-        <form id="surveyForm">
+        <form id="surveyForm" novalidate>
 
           <!-- Step 1: treatment_type -->
           <div class="form-step active">
@@ -120,7 +122,18 @@ start_secure_session();
             <h2 class="step-title">ما هو عمرك؟</h2>
             <div class="field-group">
               <label class="field-label">العمر</label>
-              <input type="number" name="age" class="text-input" min="0" placeholder="أدخل عمرك" />
+              <input type="number" name="age" id="ageInput" class="text-input" min="0" placeholder="أدخل عمرك" required />
+            </div>
+
+            <!-- سؤال موافقة الوالدين: يظهر فقط عند العمر أقل من 18.
+                 الراديو معطّل (disabled) افتراضياً حتى يُستثنى من التحقق عندما يكون السؤال مخفياً. -->
+            <div class="field-group" id="parentalConsentGroup" style="display:none;">
+              <p class="field-hint" id="parentalConsentNote">
+                لا يمكن إنشاء حساب لمن هم أقل من 18 سنة إلا بوجود وموافقة أحد الوالدين.
+              </p>
+              <label class="field-label">هل يوجد موافقة وحضور أحد الوالدين؟</label>
+              <label class="option-line"><input type="radio" name="parental_consent" value="YES" disabled /> نعم</label>
+              <label class="option-line"><input type="radio" name="parental_consent" value="NO" disabled /> لا</label>
             </div>
           </div>
 
@@ -138,7 +151,7 @@ start_secure_session();
             <h2 class="step-title">ما هي جنسيتك؟</h2>
             <div class="field-group">
               <label class="field-label">الجنسية</label>
-              <input type="text" name="nationality" class="text-input" placeholder="اكتب جنسيتك" />
+              <input type="text" name="nationality" class="text-input" placeholder="اكتب جنسيتك" required />
             </div>
           </div>
 

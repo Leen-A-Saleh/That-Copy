@@ -42,7 +42,7 @@ function therapistHandleAppointmentAction(button, action) {
       if (!result.data.success) {
         const message =
           result.data.message || "تعذر تنفيذ الإجراء. يرجى المحاولة مرة أخرى.";
-        alert(message);
+        showErrorAlert(message);
         buttons.forEach(function (btn) {
           btn.disabled = false;
         });
@@ -66,7 +66,7 @@ function therapistHandleAppointmentAction(button, action) {
       }
     })
     .catch(function () {
-      alert("حدث خطأ، يرجى المحاولة مرة أخرى");
+      showErrorAlert("حدث خطأ، يرجى المحاولة مرة أخرى");
       buttons.forEach(function (btn) {
         btn.disabled = false;
       });

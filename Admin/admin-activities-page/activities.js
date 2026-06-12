@@ -197,7 +197,7 @@ function renderGrid() {
         toggle.checked = !toggle.checked;
         renderStats();
         renderTabs();
-        alert(err.message || 'فشل تحديث الحالة');
+        showErrorAlert(err.message || 'فشل تحديث الحالة');
       }
     });
   });
@@ -229,7 +229,7 @@ function handlePreview(id) {
   if (a.link) {
     window.open(a.link, '_blank');
   } else {
-    alert('لا يوجد رابط لهذا النشاط بعد.');
+    showInfoToast('لا يوجد رابط لهذا النشاط بعد.');
   }
 }
 
@@ -320,7 +320,7 @@ async function saveActivity() {
     setTimeout(() => window.location.reload(), 600);
   } catch (err) {
     saveBtn.disabled = false;
-    alert(err.message || 'حدث خطأ، يرجى المحاولة مجدداً');
+    showErrorAlert(err.message || 'حدث خطأ، يرجى المحاولة مجدداً');
   }
 }
 
@@ -351,7 +351,7 @@ async function confirmDelete() {
     setTimeout(() => window.location.reload(), 600);
   } catch (err) {
     confirmBtn.disabled = false;
-    alert(err.message || 'حدث خطأ أثناء الحذف');
+    showErrorAlert(err.message || 'حدث خطأ أثناء الحذف');
   }
 }
 

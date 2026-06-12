@@ -99,36 +99,38 @@ document.addEventListener('DOMContentLoaded', function () {
       var title = this.dataset.title;
       var row = this.closest('tr');
 
-      if (!confirm('هل أنت متأكد من حذف النشاط "' + title + '"؟')) return;
+      showConfirm('هل أنت متأكد من حذف النشاط "' + title + '"؟', { icon: 'warning' }).then(function (ok) {
+        if (!ok) return;
 
-      var fd = new FormData();
-      fd.append('action', 'delete');
-      fd.append('activity_id', id);
+        var fd = new FormData();
+        fd.append('action', 'delete');
+        fd.append('activity_id', id);
 
-      fetch('index.php', {
-        method: 'POST',
-        headers: { 'X-Requested-With': 'XMLHttpRequest' },
-        body: fd
-      })
-        .then(function (r) { return r.json(); })
-        .then(function (data) {
-          if (data.success) {
-            row.style.transition = 'opacity 0.3s';
-            row.style.opacity = '0';
-            setTimeout(function () {
-              row.remove();
-              var tbody = document.querySelector('.activities-table tbody');
-              if (tbody && tbody.children.length === 0) {
-                location.reload();
-              }
-            }, 300);
-          } else {
-            alert(data.message || 'حدث خطأ أثناء الحذف');
-          }
+        fetch('index.php', {
+          method: 'POST',
+          headers: { 'X-Requested-With': 'XMLHttpRequest' },
+          body: fd
         })
-        .catch(function () {
-          alert('حدث خطأ في الاتصال');
-        });
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            if (data.success) {
+              row.style.transition = 'opacity 0.3s';
+              row.style.opacity = '0';
+              setTimeout(function () {
+                row.remove();
+                var tbody = document.querySelector('.activities-table tbody');
+                if (tbody && tbody.children.length === 0) {
+                  location.reload();
+                }
+              }, 300);
+            } else {
+              showErrorAlert(data.message || 'حدث خطأ أثناء الحذف');
+            }
+          })
+          .catch(function () {
+            showErrorAlert('حدث خطأ في الاتصال');
+          });
+      });
     });
   });
 

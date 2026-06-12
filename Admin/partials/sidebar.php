@@ -167,3 +167,7 @@ $adminSidebarItems = [
 </aside>
 
 <div class="sidebar-overlay"></div>
+
+<!-- نظام التنبيهات الموحّد SweetAlert2 (متاح لكل صفحات لوحة الإدارة) -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/That-Copy/Public/js/sweet-alerts.js"></script>

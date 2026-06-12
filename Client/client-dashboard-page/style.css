@@ -265,6 +265,86 @@ body {
   gap: 20px;
 }
 
+/* ─── قسم التوصيات الذكية (Rule-Based AI) ─── */
+.reco-section {
+  margin-bottom: 32px;
+  padding: 22px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #eafaf9 0%, #f5f7f5 100%);
+  border: 1px solid #cfeceb;
+}
+
+.reco-header h2 {
+  font-size: 22px;
+  color: #178a8a;
+  margin-bottom: 4px;
+}
+
+.reco-header h2 i {
+  margin-left: 6px;
+}
+
+.reco-header p {
+  font-size: 14px;
+  color: #5a7370;
+  margin-bottom: 18px;
+}
+
+.reco-doctors {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.reco-card {
+  position: relative;
+  border: 2px solid #2fa4a9;
+}
+
+.reco-badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 2;
+  background: #2aa5a5;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 5px 10px;
+  border-radius: 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+}
+
+.reco-badge i {
+  margin-left: 4px;
+}
+
+.reco-reasons {
+  margin-top: 12px;
+  background: #f0faf9;
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.reco-reasons-title {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: #178a8a;
+  margin-bottom: 6px;
+}
+
+.reco-reasons ul {
+  margin: 0;
+  padding-right: 18px;
+}
+
+.reco-reasons li {
+  font-size: 12.5px;
+  color: #555;
+  line-height: 1.7;
+}
+
 .doctor-card {
   background: white;
   border-radius: 12px;
@@ -396,7 +476,8 @@ footer {
     right: 0;
   }
 
-  .doctors {
+  .doctors,
+  .reco-doctors {
     grid-template-columns: repeat(2, 1fr);
   }
 
@@ -419,7 +500,8 @@ footer {
     padding: 80px 15px 100px;
   }
 
-  .doctors {
+  .doctors,
+  .reco-doctors {
     grid-template-columns: 1fr;
   }
 

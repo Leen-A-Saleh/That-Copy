@@ -86,10 +86,10 @@ function doDeleteTherapist(id) {
       if (data.success) {
         window.location.reload();
       } else {
-        alert("حدث خطأ أثناء الحذف. حاول مجدداً.");
+        showErrorAlert("حدث خطأ أثناء الحذف. حاول مجدداً.");
       }
     })
-    .catch(() => alert("تعذّر الاتصال بالخادم."));
+    .catch(() => showErrorAlert("تعذّر الاتصال بالخادم."));
 }
 
 // Render table rows
@@ -371,12 +371,12 @@ function saveTherapist() {
         window.location.reload();
       } else {
         saveBtn.disabled = false;
-        alert("حدث خطأ أثناء الحفظ. حاول مجدداً.");
+        showErrorAlert("حدث خطأ أثناء الحفظ. حاول مجدداً.");
       }
     })
     .catch(() => {
       saveBtn.disabled = false;
-      alert("تعذّر الاتصال بالخادم.");
+      showErrorAlert("تعذّر الاتصال بالخادم.");
     });
 }
 

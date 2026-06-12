@@ -315,9 +315,10 @@ document.addEventListener("DOMContentLoaded", () => {
   if (logoutAllBtn) {
     logoutAllBtn.addEventListener("click", async () => {
       if (
-        !confirm(
-          "هل أنت متأكد من تسجيل الخروج من جميع الأجهزة؟ سيتم إنهاء جميع الجلسات النشطة بما فيها هذا الجهاز."
-        )
+        !(await showConfirm(
+          "هل أنت متأكد من تسجيل الخروج من جميع الأجهزة؟ سيتم إنهاء جميع الجلسات النشطة بما فيها هذا الجهاز.",
+          { icon: "warning" }
+        ))
       ) {
         return;
       }

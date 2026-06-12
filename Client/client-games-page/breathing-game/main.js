@@ -209,9 +209,9 @@ async function renderList() {
 }
 
 window.clearHistory = function() {
-    if (!confirm("هل أنت متأكد من حذف جميع محاولات التنفس؟")) return;
-
-    deleteBreathingHistory();
+    showConfirm("هل أنت متأكد من حذف جميع محاولات التنفس؟", { icon: "warning" }).then(function (ok) {
+        if (ok) deleteBreathingHistory();
+    });
 }
 
 async function deleteBreathingHistory() {
@@ -221,7 +221,7 @@ async function deleteBreathingHistory() {
         await renderList();
     } catch (error) {
         console.error(error);
-        alert("تعذر حذف السجل، حاول مرة أخرى");
+        showErrorAlert("تعذر حذف السجل، حاول مرة أخرى");
     }
 }
 

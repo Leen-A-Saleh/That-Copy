@@ -42,6 +42,9 @@ $mainScriptVersion = (string) filemtime(__DIR__ . '/main.js');
     <button id="backBtn" >رجوع</button>
 </div>
 
+<!-- نظام التنبيهات الموحّد SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/That-Copy/Public/js/sweet-alerts.js"></script>
 <script src="main.js?v=<?= e($mainScriptVersion) ?>"></script>
 </body>
 </html>

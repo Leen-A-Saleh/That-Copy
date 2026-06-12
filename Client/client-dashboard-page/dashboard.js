@@ -130,7 +130,7 @@ document.addEventListener("click", function (e) {
   if (e.target.classList.contains("book-btn")) {
     const doctorId = Number(e.target.dataset.id || 0);
     if (!Number.isInteger(doctorId) || doctorId <= 0) {
-      alert("تعذر تحديد الأخصائي. يرجى المحاولة مرة أخرى.");
+      showErrorAlert("تعذر تحديد الأخصائي. يرجى المحاولة مرة أخرى.");
       return;
     }
     window.location.href = "../client-booking-page/booking.php?id=" + encodeURIComponent(doctorId);
@@ -140,5 +140,5 @@ document.addEventListener("click", function (e) {
 // ─── Booking Error
 
 if (bookingError === "missing_therapist_id") {
-  alert("لا يمكن فتح صفحة الحجز بدون تحديد أخصائي.");
+  showWarningAlert("لا يمكن فتح صفحة الحجز بدون تحديد أخصائي.");
 }

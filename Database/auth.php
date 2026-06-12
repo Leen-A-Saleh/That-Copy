@@ -561,6 +561,7 @@ function process_full_signup(array $post): array
     $surveyAlcohol = trim((string) ($post['survey_alcohol'] ?? ''));
     $surveyDrugs = trim((string) ($post['survey_drugs'] ?? ''));
     $surveyContactPreference = trim((string) ($post['survey_contact_preference'] ?? ''));
+    $surveyParentalConsent = trim((string) ($post['survey_parental_consent'] ?? ''));
 
     // Validation
     if ($fullName === '') {
@@ -587,6 +588,11 @@ function process_full_signup(array $post): array
     }
     if ($password !== $confirmPassword) {
         $errors[] = 'كلمتا المرور غير متطابقتين.';
+    }
+    // قاعدة العمر: يُمنع إنشاء حساب لمن هم أقل من 18 سنة إلا بموافقة وحضور أحد الوالدين
+    // (تحقق خادمي حاسم؛ يُسمح فقط عند parental_consent = YES القادمة من سؤال موافقة الوالدين)
+    if ($surveyAge > 0 && $surveyAge < 18 && $surveyParentalConsent !== 'YES') {
+        $errors[] = 'لا يمكن إنشاء حساب لمن هم أقل من 18 سنة إلا بوجود وموافقة أحد الوالدين.';
     }
     if ($errors !== []) {
         return $errors;

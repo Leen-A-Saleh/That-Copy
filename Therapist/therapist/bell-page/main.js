@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
       postAction("delete", id)
         .then(data => {
           if (!data.success) {
-            alert(data.message || "تعذّر حذف التنبيه");
+            showErrorAlert(data.message || "تعذّر حذف التنبيه");
             return;
           }
           row.style.height = row.offsetHeight + "px";
@@ -35,7 +35,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (!document.querySelector(".notification")) location.reload();
           }, 260);
         })
-        .catch(() => alert("حدث خطأ في الاتصال"));
+        .catch(() => showErrorAlert("حدث خطأ في الاتصال"));
     });
   });
 
@@ -48,7 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
       postAction("toggle_read", id)
         .then(data => {
           if (!data.success) {
-            alert(data.message || "تعذّر تحديث الحالة");
+            showErrorAlert(data.message || "تعذّر تحديث الحالة");
             return;
           }
           const isRead = data.is_read === 1;
@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
           if (isRead && dot) dot.remove();
           if (isRead) btn.remove();
         })
-        .catch(() => alert("حدث خطأ في الاتصال"));
+        .catch(() => showErrorAlert("حدث خطأ في الاتصال"));
     });
   });
 

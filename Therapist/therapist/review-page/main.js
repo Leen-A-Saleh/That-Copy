@@ -93,10 +93,10 @@ document.addEventListener("DOMContentLoaded", function () {
           if (data.success) {
             location.reload();
           } else {
-            alert(data.message || "تعذّر تحديث الحالة");
+            showErrorAlert(data.message || "تعذّر تحديث الحالة");
           }
         })
-        .catch(() => alert("حدث خطأ في الاتصال"));
+        .catch(() => showErrorAlert("حدث خطأ في الاتصال"));
     });
   });
 });

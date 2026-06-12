@@ -23,6 +23,9 @@ unset($_SESSION['errors'], $_SESSION['old']);
   <link rel="stylesheet" href="../../total.css">
   <link rel="stylesheet" href="./style.css" />
   <script src="../../total.js"></script>
+  <!-- نظام التنبيهات SweetAlert2 + الدوال الموحّدة -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="../js/sweet-alerts.js"></script>
 </head>
 
 <body>
@@ -43,15 +46,12 @@ unset($_SESSION['errors'], $_SESSION['old']);
   <main class="page-main">
     <section class="card">
 
-      <?php if (!empty($errors)): ?>
-        <div class="error-box">
-          <?php foreach ($errors as $error): ?>
-            <span class="error-message"><?= e($error) ?></span>
-          <?php endforeach; ?>
-        </div>
-      <?php endif; ?>
+      <!-- أخطاء الخادم تُمرَّر إلى JavaScript لعرضها عبر SweetAlert بدل صندوق الأخطاء التقليدي -->
+      <script>
+        window.SERVER_ERRORS = <?= json_encode(array_values($errors), JSON_UNESCAPED_UNICODE) ?>;
+      </script>
 
-      <form id="surveyForm" action="../handlers/signup.php" method="POST">
+      <form id="surveyForm" action="../handlers/signup.php" method="POST" novalidate>
         <?= csrf_input() ?>
 
         <input type="hidden" name="survey_treatment_type" id="survey_treatment_type" />
@@ -71,6 +71,7 @@ unset($_SESSION['errors'], $_SESSION['old']);
         <input type="hidden" name="survey_alcohol" id="survey_alcohol" />
         <input type="hidden" name="survey_drugs" id="survey_drugs" />
         <input type="hidden" name="survey_contact_preference" id="survey_contact_preference" />
+        <input type="hidden" name="survey_parental_consent" id="survey_parental_consent" />
 
         <input type="hidden" name="treatment_type" id="treatment_type" value="INDIVIDUAL_THERAPY" />
         <input type="hidden" name="session_type" value="BOTH" />
@@ -154,7 +155,8 @@ unset($_SESSION['errors'], $_SESSION['old']);
             smoking: "survey_smoking",
             alcohol: "survey_alcohol",
             drugs: "survey_drugs",
-            contact_preference: "survey_contact_preference"
+            contact_preference: "survey_contact_preference",
+            parental_consent: "survey_parental_consent"
           };
 
           for (const [key, id] of Object.entries(fieldMap)) {
@@ -173,25 +175,47 @@ unset($_SESSION['errors'], $_SESSION['old']);
         }
       }
 
+      // عرض أخطاء الخادم (إن وُجدت) عبر SweetAlert بدل صندوق الأخطاء التقليدي
+      if (Array.isArray(window.SERVER_ERRORS) && window.SERVER_ERRORS.length > 0) {
+        showErrorAlert(window.SERVER_ERRORS.join("\n"));
+      }
+
+      // التحقق المخصّص عند الإرسال (بدون checkValidity على الفورم بالكامل)
+      // الفورم يحمل novalidate لمنع رسائل المتصفح الافتراضية مثل "Please fill out this field".
       form.addEventListener("submit", function (e) {
+        const fullName = document.getElementById("fullName").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const phone = document.getElementById("phone").value.trim();
+        const username = document.getElementById("username").value.trim();
         const password = document.getElementById("password").value;
         const confirm = document.getElementById("confirmPassword").value;
 
+        if (!fullName || !email || !phone || !username || !password || !confirm) {
+          e.preventDefault();
+          showErrorAlert("يرجى تعبئة جميع الحقول المطلوبة قبل إنشاء الحساب.");
+          return;
+        }
         if (password.length < 8) {
           e.preventDefault();
-          alert("كلمة المرور يجب أن تحتوي على 8 أحرف على الأقل.");
+          showErrorAlert("كلمة المرور يجب أن تحتوي على 8 أحرف على الأقل.");
           return;
         }
         if (password !== confirm) {
           e.preventDefault();
-          alert("كلمتا المرور غير متطابقتين.");
+          showErrorAlert("كلمتا المرور غير متطابقتين.");
           return;
         }
         if (!document.getElementById("survey_gender").value) {
           e.preventDefault();
-          alert("يرجى إكمال الاستبيان أولاً قبل إنشاء الحساب.");
-          window.location.href = "../signup/index.php";
+          showWarningAlert("يرجى إكمال الاستبيان أولاً قبل إنشاء الحساب.");
+          setTimeout(function () {
+            window.location.href = "../signup/index.php";
+          }, 1500);
+          return;
         }
+
+        // كل التحققات نجحت → Toast نجاح قبل إرسال النموذج للخادم
+        showSuccessToast("جارٍ إنشاء حسابك...");
       });
     });
   </script>

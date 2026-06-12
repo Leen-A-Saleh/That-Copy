@@ -188,7 +188,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (deleteAccountBtn) {
     deleteAccountBtn.addEventListener("click", async () => {
-      if (!confirm("هل أنت متأكد من حذف الحساب؟ هذا الإجراء لا يمكن التراجع عنه.")) {
+      if (!(await showConfirm("هل أنت متأكد من حذف الحساب؟ هذا الإجراء لا يمكن التراجع عنه.", { icon: "warning", confirmText: "نعم، احذف" }))) {
         return;
       }
 

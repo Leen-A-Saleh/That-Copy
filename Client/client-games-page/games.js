@@ -89,7 +89,7 @@ uploadBtn.addEventListener("click", async () => {
       selectedFiles = [];
       renderPreviews();
     } else {
-      alert("فشل الرفع، حاول مرة ثانية");
+      showErrorAlert("فشل الرفع، حاول مرة ثانية");
     }
   } catch (err) {
     successMsg.style.display = "block";

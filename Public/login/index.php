@@ -34,6 +34,10 @@ unset($_SESSION['errors'], $_SESSION['old_email']);
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
           crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <!-- نظام التنبيهات SweetAlert2 + الدوال الموحّدة -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="../js/sweet-alerts.js"></script>
 </head>
 <body>
 
@@ -55,8 +59,15 @@ unset($_SESSION['errors'], $_SESSION['old_email']);
 <main class="page">
     <section class="login-section">
         <div class="card">
-            <?php if ($flash !== null): ?>
-                <div class="<?= $flash['type'] === 'success' ? 'success-msg' : 'error-msg' ?>">
+            <?php if ($flash !== null && $flash['type'] === 'success'): ?>
+                <!-- رسالة النجاح (مثل: تم إنشاء الحساب) تظهر كـ Toast عبر SweetAlert -->
+                <script>
+                    window.addEventListener("DOMContentLoaded", function () {
+                        showSuccessToast(<?= json_encode((string) $flash['message'], JSON_UNESCAPED_UNICODE) ?>);
+                    });
+                </script>
+            <?php elseif ($flash !== null): ?>
+                <div class="error-msg">
                     <?= e((string) $flash['message']) ?>
                 </div>
             <?php endif; ?>

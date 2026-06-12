@@ -97,9 +97,17 @@ if (searchInput) {
 const form = document.getElementById('sessionNotesForm');
 if (form) {
   form.addEventListener('submit', function (e) {
-    if (!confirm('هل أنت متأكد من إنهاء الجلسة وحفظ الملاحظات؟\nسيتم تغيير حالة الموعد إلى "مكتمل".')) {
-      e.preventDefault();
+    // التأكيد غير متزامن: نمنع الإرسال دائماً ثم نُرسل برمجياً عند الموافقة
+    if (form.dataset.confirmed === 'true') {
+      return;
     }
+    e.preventDefault();
+    showConfirm('هل أنت متأكد من إنهاء الجلسة وحفظ الملاحظات؟\nسيتم تغيير حالة الموعد إلى "مكتمل".', { icon: 'warning' }).then(function (ok) {
+      if (ok) {
+        form.dataset.confirmed = 'true';
+        form.submit();
+      }
+    });
   });
 }
 

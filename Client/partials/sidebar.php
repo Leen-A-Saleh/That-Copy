@@ -260,3 +260,7 @@ function client_sidebar_li_class(string $key, string $active): string
       });
   })();
 </script>
+
+<!-- نظام التنبيهات الموحّد SweetAlert2 (متاح لكل صفحات العميل) -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="/That-Copy/Public/js/sweet-alerts.js"></script>

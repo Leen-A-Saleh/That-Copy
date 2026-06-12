@@ -26,7 +26,7 @@ if (recommendedBtn) {
     if (href) {
       window.location.href = href;
     } else {
-      alert("لا يوجد اختبار موصى به حالياً");
+      showInfoToast("لا يوجد اختبار موصى به حالياً");
     }
   });
 }

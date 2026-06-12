@@ -136,7 +136,7 @@ document.getElementById("sendBtn").addEventListener("click", async () => {
     closeModal();
     setTimeout(() => window.location.reload(), 600);
   } catch (err) {
-    alert(err.message || "حدث خطأ، يرجى المحاولة مجدداً");
+    showErrorAlert(err.message || "حدث خطأ، يرجى المحاولة مجدداً");
   }
 });
 
