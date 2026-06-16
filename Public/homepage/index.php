@@ -123,7 +123,6 @@ require_once __DIR__ . '/homepage-database.php';
 
         <div class="feature-card">
           <div class="feature-icon blue">
-
             <i class="fa-solid fa-shield-halved"></i>
           </div>
           <h3 class="feature-title"> خصوصية تامة</h3>
@@ -132,7 +131,7 @@ require_once __DIR__ . '/homepage-database.php';
 
         <div class="feature-card">
           <div class="feature-icon teal">
-            <i class="fa-solid fa-user-group"></i>
+            <i class="fa-solid fa-user-doctor"></i>
           </div>
           <h3 class="feature-title"> أخصائيون معتمدون</h3>
           <p class="feature-text"> نخبة من الأخصائيين المؤهلين والمعتمدين </p>
@@ -140,7 +139,7 @@ require_once __DIR__ . '/homepage-database.php';
 
         <div class="feature-card">
           <div class="feature-icon purple">
-            <i class=" fa-solid fa-comment"></i>
+            <i class="fa-solid fa-calendar-check"></i>
           </div>
           <h3 class="feature-title"> جلسات مرنة</h3>
           <p class="feature-text"> احجز جلستك عبر الإنترنت في أي وقت يناسبك</p>
@@ -148,7 +147,7 @@ require_once __DIR__ . '/homepage-database.php';
 
         <div class="feature-card">
           <div class="feature-icon green">
-            <i class="fa-solid fa-wave-square"></i>
+            <i class="fa-solid fa-headset"></i>
           </div>
           <h3 class="feature-title"> دعم مستمر</h3>
           <p class="feature-text">متابعة مستمرة ودعم على مدار الساعة</p>
@@ -189,10 +188,17 @@ require_once __DIR__ . '/homepage-database.php';
           <span class="mood-choice" data-value="5">😄</span>
         </div>
         <div class="mood-slider">
-          <div class="mood-gradient-bar"></div>
-          <div class="mood-thumb-dot" id="moodThumb"> .</div>
-
-          <input type="range" id="moodRange" min="1" max="5" value="3" />
+          <div class="mood-drag-hint" id="moodDragHint">
+            👆 <span>اسحب الشخصية لتحديد شعورك</span>
+          </div>
+          <div class="mood-track"></div>
+          <div class="mood-progress-fill" id="moodProgressFill"></div>
+          <div class="mood-thumb-dot" id="moodThumb">
+            <img src="./img/girl_avatar.png" alt="أفاتار المشاعر" class="mood-avatar-img" />
+            <div class="mood-thumb-emoji-badge" id="moodThumbEmoji">😐</div>
+            <div class="mood-ripple" id="moodRipple"></div>
+          </div>
+          <input type="range" id="moodRange" min="1" max="5" value="3" aria-label="كيف شعورك اليوم؟" />
         </div>
 
         <div class="mood-scale-labels" aria-hidden="true">
@@ -203,13 +209,13 @@ require_once __DIR__ . '/homepage-database.php';
           <span>ممتاز</span>
         </div>
 
-        <div class="mood-advice">
+        <div class="mood-advice" id="moodAdvice" aria-live="polite">
           <div class="mood-top">
-            <span>♡</span>
-            <span>رسالة لك</span>
+            <span id="moodIcon" class="mood-icon-wrapper"><i class="fa-solid fa-heart"></i></span>
+            <span class="mood-advice-label">رسالة لك</span>
           </div>
-          <div class="mood-text">
-            شعورك مفهوم تماماً. لا تتردد في طلب المساعدة، نحن هنا لدعمك في كل خطوة.
+          <div class="mood-text" id="moodAdviceText">
+            يوم هادئ، ربما تكون هذه فرصة للاهتمام بنفسك قليلًا.
           </div>
         </div>
 
@@ -272,30 +278,33 @@ require_once __DIR__ . '/homepage-database.php';
         </h1>
       </div>
       <p class="sectione-text"> ثلاث خطوات بسيطة للبدء في رحلتك العلاجية</p>
-      <div class="wrapper">
-        <div class="part part-1">
-          <div class="step-card">
-            <div class="step-number">1</div>
-            <h3 class="stepe-title"> ابدأ بالتسجيل</h3>
-            <p class="feature-text">أنشئ حسابك في دقائق معدودة</p>
+      <div class="booking-journey-wrapper">
+        <div class="booking-journey-card">
+          <div class="booking-journey-icon-container">
+            <i class="fa-solid fa-user-doctor booking-journey-icon"></i>
+            <span class="booking-journey-step-badge">1</span>
           </div>
-        </div>
-        <div class="part part-2">
-          <div class="step-card">
-            <div class="step-number">2</div>
-            <h3 class="stepe-title"> اختر الأخصائي</h3>
-            <p class="feature-text">اختر الأخصائي المناسب والموعد الملائم</p>
-          </div>
+          <h3 class="booking-journey-title">ابدأ بالتسجيل</h3>
+          <p class="booking-journey-desc">أنشئ حسابك في دقائق معدودة</p>
         </div>
 
-        <div class="part part-3">
-          <div class="step-card">
-            <div class="step-number">3</div>
-            <h3 class="stepe-title">ابدأ الجلسة </h3>
-            <p class="feature-text"> ابدأ جلستك الأولى عبر الإنترنت</p>
+        <div class="booking-journey-card">
+          <div class="booking-journey-icon-container">
+            <i class="fa-solid fa-calendar-check booking-journey-icon"></i>
+            <span class="booking-journey-step-badge">2</span>
           </div>
+          <h3 class="booking-journey-title">اختر الأخصائي</h3>
+          <p class="booking-journey-desc">اختر الأخصائي المناسب والموعد الملائم</p>
         </div>
 
+        <div class="booking-journey-card">
+          <div class="booking-journey-icon-container">
+            <i class="fa-solid fa-video booking-journey-icon"></i>
+            <span class="booking-journey-step-badge">3</span>
+          </div>
+          <h3 class="booking-journey-title">ابدأ الجلسة</h3>
+          <p class="booking-journey-desc">ابدأ جلستك الأولى عبر الإنترنت</p>
+        </div>
       </div>
 
     </div>
@@ -309,54 +318,41 @@ require_once __DIR__ . '/homepage-database.php';
         <span class="highlight">المتميزة </span>
       </h1>
 
-      <div class="cards">
+      <div class="premium-services-wrapper">
 
-        <article class="carde">
-          <div class="card-body">
-            <div class="card-top">
-              <div class="card-img">
-                <img src="./img/استشارة نفسية فردية .png" alt=" استشارة نفسية فردية" width=280px; height=120px;>
-                <div>
-                  <h3 class="card-title"> استشارات نفسية فردية</h3>
-                  <p class="card-text"> جلسات فردية مع أخصائيين معتمدين</p>
-                </div>
-              </div>
-            </div>
-            <a href="../login/index.php" class="card-link">اعرف المزيد</a>
+        <article class="premium-service-card">
+          <div class="premium-service-image">
+            <img src="./img/individual_therapy.png" alt="استشارة نفسية فردية">
+          </div>
+          <div class="premium-service-content">
+            <h3 class="premium-service-title">استشارات نفسية فردية</h3>
+            <p class="premium-service-desc">جلسات فردية مع أخصائيين معتمدين</p>
+            <a href="../login/index.php" class="premium-service-button">اعرف المزيد</a>
           </div>
         </article>
 
-
-        <article class="carde">
-          <div class="card-body">
-            <div class="card-top">
-              <div class="card-img">
-                <img src="./img/بارمج علاجية متخصصة.png" alt=" برامج علاجية متخصصة" width=280px; height=120px;>
-                <div>
-                  <h3 class="card-title"> برامج علاجية متخصصة</h3>
-                  <p class="card-text">برامج مصممة خصيصاً لحالتك </p>
-                </div>
-              </div>
-            </div>
-            <a href="../login/index.php" class="card-link">اعرف المزيد</a>
+        <article class="premium-service-card">
+          <div class="premium-service-image">
+            <img src="./img/online_therapy.png" alt="برامج علاجية متخصصة">
+          </div>
+          <div class="premium-service-content">
+            <h3 class="premium-service-title">برامج علاجية متخصصة</h3>
+            <p class="premium-service-desc">برامج مصممة خصيصاً لحالتك</p>
+            <a href="../login/index.php" class="premium-service-button">اعرف المزيد</a>
           </div>
         </article>
 
-
-        <article class="carde">
-          <div class="card-body">
-            <div class="card-top">
-              <div class="card-img">
-                <img src="./img/اختبارات نفسية .png" alt="اختبارات نفسية  " width=280px; height=120px;>
-                <div>
-                  <h3 class="card-title"> اختبارات نفسية </h3>
-                  <p class="card-text"> تقييم شامل لحالتك النفسية</p>
-                </div>
-              </div>
-            </div>
-            <a href="../login/index.php" class="card-link">اعرف المزيد</a>
+        <article class="premium-service-card">
+          <div class="premium-service-image">
+            <img src="./img/emotional_wellbeing.png" alt="اختبارات نفسية">
+          </div>
+          <div class="premium-service-content">
+            <h3 class="premium-service-title">اختبارات نفسية</h3>
+            <p class="premium-service-desc">تقييم شامل لحالتك النفسية</p>
+            <a href="../login/index.php" class="premium-service-button">اعرف المزيد</a>
           </div>
         </article>
+
       </div>
     </div>
   </section>
@@ -372,58 +368,90 @@ require_once __DIR__ . '/homepage-database.php';
         <p class="sectione-text">تجارب حقيقية من مرضى استعادوا حياتهم مع منصة ذات</p>
       </div>
 
-      <div class="stories-grid">
-
-        <div class="card green">
-          <div class="quote-box">
-            <div class="quote-icon">“</div>
-            <p> "كنت أعاني من قلق مستمر أثر على حياتي العملية والاجتماعية. بعد 8 جلسات مع د. سارة، تعلمت كيف أتعامل مع القلق وأصبحت أكثر ثقة بنفسي."</p>
-          </div>
-          <div class="footer">
-            <div class="details">
-              <h3 class="name"> نورة العتيبي</h3>
-              <p class="location"> 18 عاماً • القلق والتوتر </p>
-              <div class="stars">★★★★★</div>
-              <div class="badge"> شهرين من العلاج </div>
+      <div class="success-slider-section">
+        <div class="success-slider-controls">
+          <button class="success-slider-btn prev-btn" onclick="const t=document.getElementById('successSliderTrack'); t.scrollBy({ left: t.firstElementChild.offsetWidth + 30, behavior: 'smooth' })"><i class="fa-solid fa-chevron-right"></i></button>
+          <button class="success-slider-btn next-btn" onclick="const t=document.getElementById('successSliderTrack'); t.scrollBy({ left: -(t.firstElementChild.offsetWidth + 30), behavior: 'smooth' })"><i class="fa-solid fa-chevron-left"></i></button>
+        </div>
+        
+        <div class="success-slider-track" id="successSliderTrack">
+          <div class="success-premium-card">
+            <div class="success-premium-quote-bg">“</div>
+            
+            <div class="success-premium-header">
+              <img src="./img/نورة العتيبي.png" alt="نورة العتيبي" class="success-premium-avatar">
+              <div class="success-premium-info">
+                <h3 class="success-premium-name">نورة العتيبي <i class="fa-solid fa-circle-check success-premium-verified"></i></h3>
+                <p class="success-premium-label">مستفيد من منصة ذات</p>
+                <div class="success-premium-stars">
+                  <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                </div>
+              </div>
             </div>
-            <img src="./img/نورة العتيبي.png" alt="نورة" class="avatar">
+            
+            <div class="success-premium-body">
+              <p class="success-premium-text">"كنت أعاني من قلق مستمر أثر على حياتي العملية والاجتماعية. بعد 8 جلسات مع د. سارة، تعلمت كيف أتعامل مع القلق وأصبحت أكثر ثقة بنفسي."</p>
+            </div>
+          </div>
+
+          <div class="success-premium-card">
+            <div class="success-premium-quote-bg">“</div>
+            
+            <div class="success-premium-header">
+              <img src="./img/عبدالله السالم.png" alt="عبدالله السالم" class="success-premium-avatar">
+              <div class="success-premium-info">
+                <h3 class="success-premium-name">عبدالله السالم <i class="fa-solid fa-circle-check success-premium-verified"></i></h3>
+                <p class="success-premium-label">مستفيد من منصة ذات</p>
+                <div class="success-premium-stars">
+                  <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                </div>
+              </div>
+            </div>
+            
+            <div class="success-premium-body">
+              <p class="success-premium-text">"مرّيت بفترة صعبة بعد فقدان وظيفتي. الأخصائي ساعدني أفهم مشاعري وأعيد بناء ثقتي. الآن أنا في وظيفة أفضل وحياتي تحسنت كثير."</p>
+            </div>
+          </div>
+
+          <div class="success-premium-card">
+            <div class="success-premium-quote-bg">“</div>
+            
+            <div class="success-premium-header">
+              <img src="./img/مريم القحطاني.png" alt="مريم القحطاني" class="success-premium-avatar">
+              <div class="success-premium-info">
+                <h3 class="success-premium-name">مريم القحطاني <i class="fa-solid fa-circle-check success-premium-verified"></i></h3>
+                <p class="success-premium-label">مستفيد من منصة ذات</p>
+                <div class="success-premium-stars">
+                  <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                </div>
+              </div>
+            </div>
+            
+            <div class="success-premium-body">
+              <p class="success-premium-text">"عانيت من الأرق لسنوات. من خلال الجلسات، تعلمت تقنيات الاسترخاء وغيّرت عاداتي. الآن أنام بشكل طبيعي وأشعر بطاقة أكبر."</p>
+            </div>
+          </div>
+          
+          <!-- Duplicate first card to ensure the slider is scrollable and looks full on large screens -->
+          <div class="success-premium-card">
+            <div class="success-premium-quote-bg">“</div>
+            
+            <div class="success-premium-header">
+              <img src="./img/نورة العتيبي.png" alt="نورة العتيبي" class="success-premium-avatar">
+              <div class="success-premium-info">
+                <h3 class="success-premium-name">نورة العتيبي <i class="fa-solid fa-circle-check success-premium-verified"></i></h3>
+                <p class="success-premium-label">مستفيد من منصة ذات</p>
+                <div class="success-premium-stars">
+                  <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
+                </div>
+              </div>
+            </div>
+            
+            <div class="success-premium-body">
+              <p class="success-premium-text">"كنت أعاني من قلق مستمر أثر على حياتي العملية والاجتماعية. بعد 8 جلسات مع د. سارة، تعلمت كيف أتعامل مع القلق وأصبحت أكثر ثقة بنفسي."</p>
+            </div>
           </div>
         </div>
-
-
-        <div class="card pink">
-          <div class="quote-box">
-            <div class="quote-icon">“</div>
-            <p>"مرّيت بفترة صعبة بعد فقدان وظيفتي. الأخصائي ساعدني أفهم مشاعري وأعيد بناء ثقتي. الآن أنا في وظيفة أفضل وحياتي تحسنت كثير."</p>
-          </div>
-          <div class="footer">
-            <div class="details">
-              <h3 class="name">عبدالله السالم</h3>
-              <p class="location"> 35 عاماً • الاكتئاب </p>
-              <div class="stars">★★★★★</div>
-              <div class="badge">4 أشهر من العلاج </div>
-            </div>
-            <img src="./img/عبدالله السالم.png" alt="عبدالله" class="avatar">
-          </div>
-        </div>
-
-
-        <div class="card blue">
-          <div class="quote-box">
-            <div class="quote-icon">“</div>
-            <p>"عانيت من الأرق لسنوات. من خلال الجلسات، تعلمت تقنيات الاسترخاء وغيّرت عاداتي. الآن أنام بشكل طبيعي وأشعر بطاقة أكبر." </p>
-          </div>
-          <div class="footer">
-            <div class="details">
-              <h3 class="name">مريم القحطاني</h3>
-              <p class="location"> 26 عاماً • اضطرابات النوم</p>
-              <div class="stars">★★★★★</div>
-              <div class="badge">6 أسابيع من العلاج</div>
-            </div>
-            <img src="./img/مريم القحطاني.png" alt="مريم" class="avatar">
-          </div>
-        </div>
-
       </div>
 
       <div class="stats-grid">
@@ -517,6 +545,7 @@ require_once __DIR__ . '/homepage-database.php';
     </div>
   </footer>
 
+  <script src="main.js"></script>
 </body>
 
 </html>

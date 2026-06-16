@@ -237,15 +237,55 @@ background:#F5F7F5;
   align-items: center;
   gap: 10px;
 }
-.date-input{
-border-radius: 8px;
-background-color:#FFFFFF ;
-font-size: 16px;
-font-weight: 400;
-padding: 4px 10px;
-  cursor: pointer;
-  color: #333333;
+.date-input {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
 
+#datePicker {
+  width: 100%;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(48, 183, 196, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  font-family: 'Cairo', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  color: #4A5565;
+  padding: 0 16px;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.3s ease;
+  appearance: none;
+}
+
+#datePicker:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(48, 183, 196, 0.12);
+  border-color: rgba(48, 183, 196, 0.6);
+}
+
+#datePicker:focus {
+  border-color: #30B7C4;
+  box-shadow: 0 0 0 4px rgba(48, 183, 196, 0.25);
+  background: #ffffff;
+}
+
+/* Enhancing the browser's native calendar icon */
+#datePicker::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  opacity: 0.5;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  /* Make the icon slightly larger */
+  transform: scale(1.2);
+}
+
+#datePicker:hover::-webkit-calendar-picker-indicator {
+  opacity: 1;
 }
 .day-filters {
   display: flex;
