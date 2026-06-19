@@ -10,6 +10,7 @@ const EXPIRED_REQUEST_CANCEL_REASON = 'انتهت صلاحية الطلب دون
 const APPOINTMENT_EFFECTIVE_STATUS_SQL = "
     CASE
         WHEN UPPER(a.status) = 'REQUESTED' AND a.date_time < NOW() THEN 'CANCELLED'
+        WHEN UPPER(a.status) = 'AWAITING_PAYMENT' AND a.payment_expiration_at < NOW() THEN 'PAYMENT_EXPIRED'
         ELSE a.status
     END
 ";
@@ -39,6 +40,54 @@ function cancelExpiredRequestedAppointments(?int $clientId = null): int
     $statement->execute($params);
 
     return $statement->rowCount();
+}
+
+function expireAwaitingPaymentAppointments(?int $clientId = null): int
+{
+    $selectSql = "SELECT appointment_id, client_id, therapist_id FROM appointments WHERE status = 'AWAITING_PAYMENT' AND payment_expiration_at < NOW()";
+    $params = [];
+    if ($clientId !== null && $clientId > 0) {
+        $selectSql .= ' AND client_id = :client_id';
+        $params['client_id'] = $clientId;
+    }
+    
+    $stmt = db()->prepare($selectSql);
+    $stmt->execute($params);
+    $expiredAppointments = $stmt->fetchAll();
+    
+    if (empty($expiredAppointments)) {
+        return 0;
+    }
+
+    $sql = "
+        UPDATE appointments
+        SET status = 'PAYMENT_EXPIRED'
+        WHERE status = 'AWAITING_PAYMENT'
+          AND payment_expiration_at < NOW()
+    ";
+    
+    if ($clientId !== null && $clientId > 0) {
+        $sql .= ' AND client_id = :client_id';
+    }
+
+    $statement = db()->prepare($sql);
+    $statement->execute($params);
+    $count = $statement->rowCount();
+    
+    if ($count > 0) {
+        require_once __DIR__ . '/notifications-database.php';
+        foreach ($expiredAppointments as $row) {
+            create_user_notification(
+                (int)$row['client_id'],
+                'انتهاء صلاحية الدفع',
+                'انتهت المهلة المحددة للدفع لموعدك مع الأخصائي. يرجى تقديم طلب موعد جديد.',
+                'ALERT',
+                'URGENT'
+            );
+        }
+    }
+
+    return $count;
 }
 
 function hasConfirmedAppointmentAt(int $therapistId, string $dateTimeText): bool
@@ -122,13 +171,14 @@ function confirmTherapistAppointmentRequest(int $therapistId, int $appointmentId
 
         $confirmStatement = $pdo->prepare(
             'UPDATE appointments
-             SET status = :status
+             SET status = :status,
+                 payment_expiration_at = DATE_ADD(NOW(), INTERVAL 24 HOUR)
              WHERE appointment_id = :appointment_id
                AND therapist_id = :therapist_id
                AND status = :requested'
         );
         $confirmStatement->execute([
-            'status' => 'CONFIRMED',
+            'status' => 'AWAITING_PAYMENT',
             'appointment_id' => $appointmentId,
             'therapist_id' => $therapistId,
             'requested' => 'REQUESTED',
@@ -169,7 +219,7 @@ function confirmTherapistAppointmentRequest(int $therapistId, int $appointmentId
 
     try {
         if ($clientId > 0) {
-            notify_client_appointment_confirmed($clientId, $therapistId, $dateTimeText);
+            notify_client_appointment_awaiting_payment($clientId, $therapistId, $dateTimeText);
         }
 
         foreach ($competingClientIds as $competingClientId) {

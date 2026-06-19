@@ -273,6 +273,30 @@ body {
 .btn-secondary i {
   font-size: 16px;
 }
+.schedule-scroll-container {
+  max-height: 400px;
+  overflow-y: auto;
+  padding-left: 8px; /* space for scrollbar */
+  margin-right: -4px; /* offset for visual alignment */
+  padding-right: 4px;
+}
+
+/* Custom scrollbar for schedule container */
+.schedule-scroll-container::-webkit-scrollbar {
+  width: 6px;
+}
+.schedule-scroll-container::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+.schedule-scroll-container::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+.schedule-scroll-container::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
 .schedule-day {
   display: flex;
   flex-direction: column;      
@@ -407,6 +431,25 @@ body {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  max-height: 250px;
+  overflow-y: auto;
+  padding-left: 8px;
+  margin-right: -4px;
+  padding-right: 4px;
+}
+.reviews-list::-webkit-scrollbar {
+  width: 6px;
+}
+.reviews-list::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+.reviews-list::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+.reviews-list::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
 }
 .review-item {
   font-weight: 400;
@@ -484,6 +527,12 @@ body {
   grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
   gap: 12px;
   margin-bottom: 14px;
+}
+.profile-bottom-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  gap: 12px;
+  align-items: stretch;
 }
 .card-header {
   display: flex;
@@ -784,7 +833,8 @@ body {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .profile-middle-row {
+  .profile-middle-row,
+  .profile-bottom-row {
     grid-template-columns: 1fr;
   }
 

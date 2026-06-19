@@ -130,6 +130,21 @@ function notify_client_appointment_confirmed(
     );
 }
 
+function notify_client_appointment_awaiting_payment(
+    int $clientUserId,
+    int $therapistUserId,
+    string $dateTimeText
+): void {
+    $therapistName = get_user_display_name($therapistUserId);
+    create_user_notification(
+        $clientUserId,
+        'موعد بانتظار الدفع',
+        'تمت الموافقة على موعدك مع الأخصائي ' . $therapistName . '. يرجى الدفع خلال ٢٤ ساعة لتأكيد الحجز.',
+        'SESSION_CONFIRMATION',
+        'URGENT'
+    );
+}
+
 function notify_client_appointment_rejected(
     int $clientUserId,
     int $therapistUserId,

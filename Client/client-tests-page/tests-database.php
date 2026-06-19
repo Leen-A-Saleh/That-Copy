@@ -7,7 +7,6 @@ require_once __DIR__ . '/../../Database/db.php';
 
 start_secure_session();
 
-// ─── Route: POST (save result) ────────────────────────────────────────────────
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Content-Type: application/json; charset=utf-8');
@@ -91,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-// ─── Route: GET ?action=stats ─────────────────────────────────────────────────
+// ─── Route: GET ?action=stats
 
 if (($_GET['action'] ?? '') === 'stats') {
     header('Content-Type: application/json; charset=utf-8');
@@ -108,7 +107,7 @@ if (($_GET['action'] ?? '') === 'stats') {
     exit;
 }
 
-// ─── Functions ────────────────────────────────────────────────────────────────
+// ─── Functions 
 
 function tests_get_client_active_case_id(int $clientId): ?int
 {

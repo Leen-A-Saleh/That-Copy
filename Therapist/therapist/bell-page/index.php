@@ -205,7 +205,7 @@ function timeAgo($datetime)
                   </div>
                   <p class="notif-text"><?= nl2br(htmlspecialchars($n['body'])) ?></p>
                   <div class="notif-meta">
-                    <span class="notif-time"><?= timeAgo($n['created_at']) ?></span>
+                    <span class="notif-time relative-time" data-timestamp="<?= $n['created_at'] ?>"><?= timeAgo($n['created_at']) ?></span>
                     <?php if ($n['priority'] === 'URGENT'): ?>
                       <span class="badge badge-urgent">عاجل</span>
                     <?php endif; ?>

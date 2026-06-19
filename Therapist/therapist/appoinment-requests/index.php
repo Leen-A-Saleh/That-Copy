@@ -16,7 +16,7 @@ therapist_handle_appointment_request_post($therapist_id);
 
 $stmt = $conn->prepare("
     SELECT a.appointment_id, a.date_time, a.mode, a.created_at, a.case_id,
-           u.name AS client_name, c.date_of_birth,
+           u.name AS client_name, c.date_of_birth, u.has_guardian,
            cs.title AS case_title, cs.priority,
            (SELECT COUNT(*) FROM sessions s WHERE s.case_id = a.case_id) AS total_sessions
     FROM appointments a
@@ -154,7 +154,12 @@ $priority_classes = ['LOW' => 'severity-low', 'MEDIUM' => 'severity-medium', 'HI
                     <div class="request-person">
                       <div class="avatar-circle"><?= firstLetter($req['client_name']) ?></div>
                       <div>
-                        <div class="request-name"><?= htmlspecialchars($req['client_name']) ?></div>
+                        <div class="request-name">
+                          <?php if (!empty($req['has_guardian'])): ?>
+                            <span class="minor-badge"><i class="fa-solid fa-user-shield"></i> تحت إشراف ولي أمر</span>
+                          <?php endif; ?>
+                          <?= htmlspecialchars($req['client_name']) ?>
+                        </div>
                         <?php if ($age): ?>
                           <div class="request-type"><?= $age ?> سنة</div>
                         <?php endif; ?>

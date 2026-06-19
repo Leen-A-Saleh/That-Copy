@@ -123,6 +123,22 @@ $adminSidebarItems = [
     text-align: center;
     font-size: 18px;
   }
+
+  .sidebar .sidebar-chat-badge.unread-badge {
+    margin-inline-start: auto;
+    flex-shrink: 0;
+    background: #30b7c4;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
 </style>
 
 <aside class="sidebar">
@@ -146,6 +162,9 @@ $adminSidebarItems = [
           <a href="<?= e($item['href']) ?>">
             <img src="<?= e($item['icon']) ?>" alt="" />
             <?= $item['label'] ?>
+            <?php if ($item['page'] === 'notifications.php'): ?>
+              <span class="unread-badge sidebar-chat-badge global-notif-badge" style="display:none;"></span>
+            <?php endif; ?>
           </a>
         </li>
       <?php endforeach; ?>
@@ -171,3 +190,4 @@ $adminSidebarItems = [
 <!-- نظام التنبيهات الموحّد SweetAlert2 (متاح لكل صفحات لوحة الإدارة) -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/That-Copy/Public/js/sweet-alerts.js"></script>
+<script src="/That-Copy/Public/js/realtime-badges.js"></script>

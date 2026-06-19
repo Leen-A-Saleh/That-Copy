@@ -41,6 +41,9 @@ dayButtons.forEach(btn => {
     session:      document.getElementById('modalSession'),
     room:         document.getElementById('modalRoom'),
     roomWrap:     document.getElementById('modalRoomWrap'),
+    guardianBanner: document.getElementById('modalGuardianBanner'),
+    guardianName: document.getElementById('modalGuardianName'),
+    guardianPhone: document.getElementById('modalGuardianPhone'),
     caseTitle:    document.getElementById('modalCase'),
     caseDesc:     document.getElementById('modalCaseDesc'),
     caseDescLabel:document.getElementById('modalCaseDescLabel'),
@@ -71,6 +74,14 @@ dayButtons.forEach(btn => {
     el.duration.textContent = d.duration;
     el.mode.textContent = d.mode;
     el.session.textContent = d.session;
+
+    if (d.hasGuardian === '1') {
+      el.guardianName.textContent = d.guardianName || 'غير متوفر';
+      el.guardianPhone.textContent = d.guardianPhone || 'غير متوفر';
+      el.guardianBanner.style.display = 'block';
+    } else {
+      el.guardianBanner.style.display = 'none';
+    }
 
     if (d.room) {
       el.room.textContent = d.room;

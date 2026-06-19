@@ -538,6 +538,13 @@ function process_full_signup(array $post): array
     $password = (string) ($post['password'] ?? '');
     $confirmPassword = (string) ($post['confirmPassword'] ?? '');
 
+    // Additional Registration Fields
+    $gender = trim((string) ($post['gender'] ?? ''));
+    $age = (int) ($post['age'] ?? 0);
+    $hasGuardian = (int) ($post['has_guardian'] ?? 0);
+    $guardianName = trim((string) ($post['guardian_name'] ?? ''));
+    $guardianPhone = trim((string) ($post['guardian_phone'] ?? ''));
+
     // Client preferences
     $treatmentType = trim((string) ($post['treatment_type'] ?? ''));
     $sessionType = trim((string) ($post['session_type'] ?? 'BOTH'));
@@ -572,6 +579,16 @@ function process_full_signup(array $post): array
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $errors[] = 'البريد الإلكتروني غير صالح.';
     }
+    if ($gender !== 'M' && $gender !== 'F') {
+        $errors[] = 'يرجى تحديد الجنس.';
+    }
+    if ($age > 0 && $age < 18) {
+        if ($hasGuardian !== 1) {
+            $errors[] = 'لا يمكن إنشاء حساب لمن هم أقل من 18 سنة إلا بوجود أحد الوالدين.';
+        } elseif ($guardianName === '' || $guardianPhone === '') {
+            $errors[] = 'يجب إدخال اسم ورقم هاتف ولي الأمر.';
+        }
+    }
     if ($phone === '') {
         $errors[] = 'رقم الهاتف مطلوب.';
     }
@@ -594,6 +611,14 @@ function process_full_signup(array $post): array
     if ($surveyAge > 0 && $surveyAge < 18 && $surveyParentalConsent !== 'YES') {
         $errors[] = 'لا يمكن إنشاء حساب لمن هم أقل من 18 سنة إلا بوجود وموافقة أحد الوالدين.';
     }
+    
+    // Clear guardian info if age is 18 or older
+    if ($age >= 18) {
+        $hasGuardian = 0;
+        $guardianName = null;
+        $guardianPhone = null;
+    }
+    
     if ($errors !== []) {
         return $errors;
     }
@@ -634,10 +659,10 @@ function process_full_signup(array $post): array
 
         $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
         $stmt = db()->prepare(
-            "INSERT INTO users (name, email, phone, username, password, role)
-             VALUES (?, ?, ?, ?, ?, 'CLIENT')"
+            "INSERT INTO users (name, email, phone, username, password, role, gender, has_guardian, guardian_name, guardian_phone)
+             VALUES (?, ?, ?, ?, ?, 'CLIENT', ?, ?, ?, ?)"
         );
-        $stmt->execute([$fullName, $email, $phone, $username, $hashedPassword]);
+        $stmt->execute([$fullName, $email, $phone, $username, $hashedPassword, $gender, $hasGuardian, $guardianName, $guardianPhone]);
         $userId = (int) db()->lastInsertId();
 
         $clientSql = 'INSERT INTO clients (client_id, survey_id, gender, treatment_type, preferred_session_type, preferred_session_time)

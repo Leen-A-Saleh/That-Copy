@@ -8,19 +8,6 @@ require_once __DIR__ . '/../../Database/profile-database.php';
 
 // ─── Fetch
 
-/**
- * Fetches all notifications for the current user, newest first.
- *
- * @return list<array{
- *   id:int,
- *   type:string,
- *   title:string,
- *   message:string,
- *   time:string,
- *   read:bool,
- *   created_at:string
- * }>
- */
 function client_get_notifications_for_current_user(): array
 {
     $userId = client_current_user_id();
@@ -60,11 +47,7 @@ function client_get_notifications_for_current_user(): array
     return $items;
 }
 
-/**
- * Returns aggregate counts for the current user's notifications.
- *
- * @return array{total:int, this_week:int, unread:int}
- */
+
 function client_get_notification_stats_for_current_user(): array
 {
     $userId = client_current_user_id();
@@ -94,11 +77,6 @@ function client_get_notification_stats_for_current_user(): array
 
 // ─── Actions
 
-/**
- * Marks every unread notification for the current user as read.
- *
- * @return int number of rows updated
- */
 function client_mark_all_notifications_as_read_for_current_user(): int
 {
     $userId = client_current_user_id();
@@ -114,11 +92,7 @@ function client_mark_all_notifications_as_read_for_current_user(): int
     return (int) $stmt->rowCount();
 }
 
-/**
- * Deletes every notification belonging to the current user.
- *
- * @return int number of rows deleted
- */
+
 function client_delete_all_notifications_for_current_user(): int
 {
     $userId = client_current_user_id();
@@ -133,13 +107,6 @@ function client_delete_all_notifications_for_current_user(): int
     return (int) $stmt->rowCount();
 }
 
-/**
- * Toggles the is_read flag of a single notification that belongs to the
- * current user.
- *
- * @return bool|null new read-state, or null when the notification was not
- *                   found (wrong id or wrong owner).
- */
 function client_toggle_notification_read_for_current_user(int $notificationId): ?bool
 {
     if ($notificationId <= 0) {

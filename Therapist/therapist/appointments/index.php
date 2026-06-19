@@ -49,7 +49,7 @@ if ($view_mode === 'weekly') {
 $sql = "
     SELECT a.appointment_id, a.date_time, a.duration_min, a.mode, a.status,
            a.zoom_link, a.room_number, a.created_at, a.case_id,
-           u.name AS client_name, c.date_of_birth,
+           u.name AS client_name, c.date_of_birth, u.has_guardian, u.guardian_name, u.guardian_phone,
            cs.title AS case_title, cs.description AS case_description,
            (SELECT COUNT(*) FROM sessions s WHERE s.case_id = a.case_id) AS total_sessions
     FROM appointments a
@@ -225,7 +225,12 @@ $mode_icons = ['ONLINE' => 'fa-solid fa-video', 'IN_CENTER' => 'fa-solid fa-buil
                   <div class="request-person">
                     <div class="avatar-circle"><?= firstLetter($appt['client_name']) ?></div>
                     <div>
-                      <div class="request-name"><?= htmlspecialchars($appt['client_name']) ?></div>
+                      <div class="request-name">
+                        <?php if (!empty($appt['has_guardian'])): ?>
+                          <span class="minor-badge"><i class="fa-solid fa-user-shield"></i> تحت إشراف ولي أمر</span>
+                        <?php endif; ?>
+                        <?= htmlspecialchars($appt['client_name']) ?>
+                      </div>
                       <?php if ($age): ?>
                         <div class="request-type"><?= $age ?> سنة</div>
                       <?php endif; ?>
@@ -294,6 +299,9 @@ $mode_icons = ['ONLINE' => 'fa-solid fa-video', 'IN_CENTER' => 'fa-solid fa-buil
                   data-case-desc="<?= htmlspecialchars($appt['case_description'] ?? '') ?>"
                   data-room="<?= htmlspecialchars($appt['room_number'] ?? '') ?>"
                   data-zoom="<?= htmlspecialchars($appt['zoom_link'] ?? '') ?>"
+                  data-has-guardian="<?= $appt['has_guardian'] ? '1' : '0' ?>"
+                  data-guardian-name="<?= htmlspecialchars($appt['guardian_name'] ?? '') ?>"
+                  data-guardian-phone="<?= htmlspecialchars($appt['guardian_phone'] ?? '') ?>"
                   data-created="<?= formatDateAr($appt['created_at']) . ' • ' . formatTime($appt['created_at']) ?>"
                   data-status-raw="<?= $status ?>">عرض التفاصيل</button>
               </footer>
@@ -324,6 +332,25 @@ $mode_icons = ['ONLINE' => 'fa-solid fa-video', 'IN_CENTER' => 'fa-solid fa-buil
             <div class="request-type" id="modalAge"></div>
           </div>
           <span class="severity-badge" id="modalStatus"></span>
+        </div>
+
+        <!-- Guardian Banner -->
+        <div class="guardian-banner" id="modalGuardianBanner" style="display:none;">
+          <div class="guardian-banner-title">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            هذا المريض قاصر (أقل من 18 عاماً)
+          </div>
+          <div class="guardian-banner-text">تتم إدارة التواصل والعلاج تحت إشراف ولي الأمر.</div>
+          <div class="guardian-info-grid">
+            <div class="guardian-info-item">
+              <div class="guardian-info-label">اسم ولي الأمر</div>
+              <div class="guardian-info-value" id="modalGuardianName"></div>
+            </div>
+            <div class="guardian-info-item">
+              <div class="guardian-info-label">رقم التواصل</div>
+              <div class="guardian-info-value" id="modalGuardianPhone"></div>
+            </div>
+          </div>
         </div>
 
         <!-- Info grid -->

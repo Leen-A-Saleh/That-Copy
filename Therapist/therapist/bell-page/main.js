@@ -32,6 +32,7 @@ document.addEventListener("DOMContentLoaded", function () {
           });
           setTimeout(() => {
             row.remove();
+            if (typeof window.refreshGlobalBadges === 'function') window.refreshGlobalBadges();
             if (!document.querySelector(".notification")) location.reload();
           }, 260);
         })
@@ -56,6 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
           const dot = row.querySelector(".notif-title-row .status-dot");
           if (isRead && dot) dot.remove();
           if (isRead) btn.remove();
+          if (typeof window.refreshGlobalBadges === 'function') window.refreshGlobalBadges();
         })
         .catch(() => showErrorAlert("حدث خطأ في الاتصال"));
     });

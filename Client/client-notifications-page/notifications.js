@@ -49,7 +49,7 @@ function renderNotifications() {
         <div>
           <div class="title">${n.title}</div>
           <div>${n.message}</div>
-          <div class="time">${n.time}</div>
+          <div class="time relative-time" data-timestamp="${n.created_at}">${n.time}</div>
         </div>
       </div>
 
@@ -63,6 +63,7 @@ function renderNotifications() {
 
   updateStats();
   updateDot();
+  if (typeof window.updateRelativeTimes === 'function') window.updateRelativeTimes();
 }
 
 // ================== ACTIONS ==================
@@ -97,6 +98,7 @@ async function toggleRead(id) {
   }
 
   renderNotifications();
+  if (typeof window.refreshGlobalBadges === 'function') window.refreshGlobalBadges();
 }
 
 if (markAllReadBtn) {
@@ -122,6 +124,7 @@ if (markAllReadBtn) {
       if (!response.ok || !result.success) {
         throw new Error("mark all read failed");
       }
+      if (typeof window.refreshGlobalBadges === 'function') window.refreshGlobalBadges();
     } catch (error) {
       notifications = previousNotifications;
       renderNotifications();
@@ -150,6 +153,7 @@ if (deleteAllBtn) {
       if (!response.ok || !result.success) {
         throw new Error("delete all failed");
       }
+      if (typeof window.refreshGlobalBadges === 'function') window.refreshGlobalBadges();
     } catch (error) {
       notifications = previousNotifications;
       renderNotifications();

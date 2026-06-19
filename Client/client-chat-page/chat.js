@@ -269,6 +269,7 @@ function loadMessages() {
       renderMessages(data);
       refreshConversationList();
       updateChatSidebarBadge();
+      if (typeof window.refreshGlobalBadges === 'function') window.refreshGlobalBadges();
     })
     .catch(function () {});
 }

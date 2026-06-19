@@ -8,6 +8,7 @@ require_once __DIR__ . '/../../Database/appointments-database.php';
 
 function getClientAppointments(int $clientId): array
 {
+    expireAwaitingPaymentAppointments($clientId);
     $effectiveStatus = APPOINTMENT_EFFECTIVE_STATUS_SQL;
 
     $stmt = db()->prepare("

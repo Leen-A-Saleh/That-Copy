@@ -17,7 +17,7 @@ $current_search = trim($_GET['search'] ?? '');
 
 $sql = "
     SELECT cs.case_id, cs.title, cs.status, cs.priority, cs.created_at,
-           u.name AS client_name, c.date_of_birth,
+           u.name AS client_name, c.date_of_birth, u.has_guardian,
            COUNT(s.session_id) AS total_sessions,
            MAX(s.start_time) AS last_session
     FROM cases cs
@@ -198,7 +198,12 @@ $status_filter = [
                             <header class="case-card-header">
                                 <div class="case-avatar"><?= firstLetterCases($case['client_name']) ?></div>
                                 <div class="case-header-text">
-                                    <div class="case-name"><?= htmlspecialchars($case['client_name']) ?></div>
+                                    <div class="case-name">
+                                        <?php if (!empty($case['has_guardian'])): ?>
+                                            <span class="minor-badge"><i class="fa-solid fa-user-shield"></i> تحت إشراف ولي أمر</span>
+                                        <?php endif; ?>
+                                        <?= htmlspecialchars($case['client_name']) ?>
+                                    </div>
                                     <?php if ($age): ?>
                                         <div class="case-age">عمر <?= $age ?> سنة</div>
                                     <?php endif; ?>

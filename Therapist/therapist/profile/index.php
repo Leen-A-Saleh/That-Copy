@@ -309,9 +309,9 @@ function timeAgo($datetime)
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-  <link rel="stylesheet" href="../thirapist.css">
+  <link rel="stylesheet" href="../thirapist.css?v=3">
   <link rel="stylesheet" href="../total.css" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=3" />
 </head>
 
 <body>
@@ -474,8 +474,10 @@ function timeAgo($datetime)
         </section>
       </section>
 
-      <!-- ── Weekly Schedule ── -->
-      <section class="dash-card schedule-card">
+      <!-- ── Schedule & Reviews Row ── -->
+      <div class="profile-bottom-row">
+        <!-- ── Weekly Schedule ── -->
+        <section class="dash-card schedule-card">
         <header class="card-header schedule-header">
           <div>
             <h3>جدول المواعيد</h3>
@@ -487,7 +489,7 @@ function timeAgo($datetime)
           </button>
         </header>
 
-        <div id="scheduleContainer">
+        <div id="scheduleContainer" class="schedule-scroll-container">
           <?php foreach ($dayOrder as $day):
             $slots   = $schedule[$day];
             $isOff   = empty($slots);
@@ -588,6 +590,7 @@ function timeAgo($datetime)
           </div>
         </div>
       </section>
+      </div> <!-- End profile-bottom-row -->
 
       <!-- ── Edit Profile Modal ── -->
       <div class="modal-overlay" id="editProfileModal">

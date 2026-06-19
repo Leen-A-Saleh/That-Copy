@@ -81,6 +81,36 @@ unset($_SESSION['errors'], $_SESSION['old']);
           <h2 class="step-title">المعلومات الشخصية</h2>
 
           <div class="field-group">
+            <label class="field-label" for="age">العمر</label>
+            <input id="age" name="age" type="number" class="text-input" placeholder="أدخل عمرك" value="<?= e($old['age'] ?? '') ?>" min="0" required />
+          </div>
+
+          <div class="field-group">
+            <label class="field-label">الجنس</label>
+            <label class="option-line"><input type="radio" name="gender" value="M" <?= ($old['gender'] ?? '') === 'M' ? 'checked' : '' ?> required /> ذكر (M)</label>
+            <label class="option-line"><input type="radio" name="gender" value="F" <?= ($old['gender'] ?? '') === 'F' ? 'checked' : '' ?> required /> أنثى (F)</label>
+          </div>
+
+          <div id="guardianSection" style="display: none;">
+            <div class="field-group" style="display: none;">
+              <label class="field-label">هل الأب أو ولي الأمر موجود؟</label>
+              <label class="option-line"><input type="radio" name="has_guardian" value="1" <?= ($old['has_guardian'] ?? '1') === '1' ? 'checked' : '' ?> /> نعم</label>
+              <label class="option-line"><input type="radio" name="has_guardian" value="0" <?= ($old['has_guardian'] ?? '') === '0' ? 'checked' : '' ?> /> لا</label>
+            </div>
+            
+            <div id="guardianDetails" style="display: none;">
+              <div class="field-group">
+                <label class="field-label" for="guardian_name">اسم ولي الأمر بالكامل</label>
+                <input id="guardian_name" name="guardian_name" type="text" class="text-input" placeholder="أدخل اسم ولي الأمر" value="<?= e($old['guardian_name'] ?? '') ?>" />
+              </div>
+              <div class="field-group">
+                <label class="field-label" for="guardian_phone">رقم هاتف ولي الأمر</label>
+                <input id="guardian_phone" name="guardian_phone" type="tel" class="text-input" placeholder="05xxxxxxxx" value="<?= e($old['guardian_phone'] ?? '') ?>" />
+              </div>
+            </div>
+          </div>
+
+          <div class="field-group">
             <label class="field-label" for="fullName">الاسم الكامل</label>
             <input id="fullName" name="fullName" type="text" class="text-input" placeholder="أدخل اسمك الكامل" value="<?= e($old['fullName'] ?? '') ?>" required />
           </div>
@@ -170,10 +200,52 @@ unset($_SESSION['errors'], $_SESSION['old']);
             const tt = document.getElementById("treatment_type");
             if (tt) tt.value = survey.treatment_type;
           }
+
+          // Pre-fill age and gender from survey if not already filled
+          const ageInput = document.getElementById("age");
+          if (survey.age && !ageInput.value) {
+            ageInput.value = survey.age;
+          }
+          if (survey.gender && !document.querySelector('input[name="gender"]:checked')) {
+            let mappedGender = survey.gender === "MALE" ? "M" : (survey.gender === "FEMALE" ? "F" : "");
+            if (mappedGender) {
+              let genderRadio = document.querySelector(`input[name="gender"][value="${mappedGender}"]`);
+              if (genderRadio) genderRadio.checked = true;
+            }
+          }
         } catch (e) {
           console.error("Error parsing survey data:", e);
         }
       }
+
+      // Logic for Guardian fields
+      const ageInput = document.getElementById('age');
+      const guardianSection = document.getElementById('guardianSection');
+      const guardianDetails = document.getElementById('guardianDetails');
+      const guardianRadios = document.querySelectorAll('input[name="has_guardian"]');
+      const guardianName = document.getElementById('guardian_name');
+      const guardianPhone = document.getElementById('guardian_phone');
+
+      function updateGuardianVisibility() {
+          const age = parseInt(ageInput.value, 10);
+          if (!isNaN(age) && age < 18) {
+              guardianSection.style.display = 'block';
+              guardianDetails.style.display = 'block';
+              let yesRadio = document.querySelector('input[name="has_guardian"][value="1"]');
+              if (yesRadio) yesRadio.checked = true;
+          } else {
+              guardianSection.style.display = 'none';
+              guardianDetails.style.display = 'none';
+              let noRadio = document.querySelector('input[name="has_guardian"][value="0"]');
+              if (noRadio) noRadio.checked = true;
+          }
+      }
+
+      if (ageInput) {
+          ageInput.addEventListener('input', updateGuardianVisibility);
+      }
+      guardianRadios.forEach(r => r.addEventListener('change', updateGuardianVisibility));
+      updateGuardianVisibility();
 
       // عرض أخطاء الخادم (إن وُجدت) عبر SweetAlert بدل صندوق الأخطاء التقليدي
       if (Array.isArray(window.SERVER_ERRORS) && window.SERVER_ERRORS.length > 0) {
@@ -205,13 +277,27 @@ unset($_SESSION['errors'], $_SESSION['old']);
           showErrorAlert("كلمتا المرور غير متطابقتين.");
           return;
         }
-        if (!document.getElementById("survey_gender").value) {
+        
+        const genderChecked = document.querySelector('input[name="gender"]:checked');
+        if (!genderChecked) {
           e.preventDefault();
-          showWarningAlert("يرجى إكمال الاستبيان أولاً قبل إنشاء الحساب.");
-          setTimeout(function () {
-            window.location.href = "../signup/index.php";
-          }, 1500);
+          showErrorAlert("يرجى تحديد الجنس.");
           return;
+        }
+
+        const ageVal = parseInt(ageInput.value, 10);
+        if (!isNaN(ageVal) && ageVal < 18) {
+          const hasGuardian = document.querySelector('input[name="has_guardian"]:checked');
+          if (!hasGuardian || hasGuardian.value !== '1') {
+            e.preventDefault();
+            showErrorAlert("لا يمكن إكمال التسجيل لمن هم أقل من 18 سنة دون وجود ولي الأمر.");
+            return;
+          }
+          if (!guardianName.value.trim() || !guardianPhone.value.trim()) {
+            e.preventDefault();
+            showErrorAlert("يرجى إدخال اسم ورقم هاتف ولي الأمر.");
+            return;
+          }
         }
 
         // كل التحققات نجحت → Toast نجاح قبل إرسال النموذج للخادم

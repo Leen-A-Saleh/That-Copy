@@ -25,6 +25,15 @@ try {
     $clientChatUnreadConversations = 0;
 }
 
+$clientIsMinor = false;
+try {
+    $stmt = db()->prepare('SELECT has_guardian FROM users WHERE user_id = ? LIMIT 1');
+    $stmt->execute([client_current_user_id()]);
+    $clientIsMinor = !empty($stmt->fetchColumn());
+} catch (Throwable) {
+    $clientIsMinor = false;
+}
+
 function client_sidebar_li_class(string $key, string $active): string
 {
     return $key === $active ? ' class="active"' : '';
@@ -118,7 +127,12 @@ function client_sidebar_li_class(string $key, string $active): string
     <div class="user-card">
       <div class="user-info">
         <div class="user-greeting">مرحباً،</div>
-        <div class="user-name"><?= e(client_display_name()) ?></div>
+        <div class="user-name">
+          <?= e(client_display_name()) ?>
+          <?php if ($clientIsMinor): ?>
+            <div style="color: #dc2626; font-size: 11px; margin-top: 4px; font-weight: bold;">تحت إشراف ولي أمر</div>
+          <?php endif; ?>
+        </div>
         <div class="user-role">مريض</div>
       </div>
     </div>
@@ -144,7 +158,7 @@ function client_sidebar_li_class(string $key, string $active): string
           الرسائل
           <span
             id="clientChatSidebarBadge"
-            class="unread-badge sidebar-chat-badge"
+            class="unread-badge sidebar-chat-badge global-msg-badge"
             <?= $clientChatUnreadConversations > 0 ? '' : ' style="display:none;"' ?>
           ><?= $clientChatUnreadConversations > 0 ? (int) $clientChatUnreadConversations : '' ?></span>
         </a>
@@ -165,9 +179,10 @@ function client_sidebar_li_class(string $key, string $active): string
       </li>
 
       <li<?= client_sidebar_li_class('notifications', (string) $clientSidebarActive) ?>>
-        <a href="../client-notifications-page/notifications.php">
+        <a href="../client-notifications-page/notifications.php" class="sidebar-chat-link">
           <img src="../images/Icon6.svg" alt="" />
           الإشعارات
+          <span class="unread-badge sidebar-chat-badge global-notif-badge" style="display:none;"></span>
         </a>
       </li>
 
@@ -191,76 +206,7 @@ function client_sidebar_li_class(string $key, string $active): string
     </ul>
   </div>
 </aside>
-<script>
-  window.clientMessageNotificationsEnabled = <?= $clientMessageNotificationsEnabled ? 'true' : 'false' ?>;
-
-  window.refreshClientChatSidebarBadge = function () {
-    const badge = document.getElementById("clientChatSidebarBadge");
-    if (!badge) return Promise.resolve();
-
-    if (!window.clientMessageNotificationsEnabled) {
-      badge.textContent = "";
-      badge.style.display = "none";
-      return Promise.resolve();
-    }
-
-    return fetch("/That-Copy/Client/client-chat-page/chat-database.php?action=badge_state", {
-      method: "GET",
-      headers: {
-        "X-Requested-With": "XMLHttpRequest",
-      },
-      cache: "no-store",
-    })
-      .then(function (response) {
-        if (!response.ok) {
-          throw new Error("chat_badge_state_failed");
-        }
-        return response.json();
-      })
-      .then(function (payload) {
-        const count = Number(
-          payload && payload.success ? payload.unread_conversations : 0
-        );
-        if (count > 0) {
-          badge.textContent = String(count);
-          badge.style.display = "";
-        } else {
-          badge.textContent = "";
-          badge.style.display = "none";
-        }
-      })
-      .catch(function () {
-      });
-  };
-
-  refreshClientChatSidebarBadge();
-
-  (() => {
-    const dot = document.getElementById("notificationDot");
-    if (!dot) return;
-
-    fetch("/That-Copy/Client/client-notifications-page/notifications.php?action=badge_state", {
-      method: "GET",
-      headers: {
-        "X-Requested-With": "XMLHttpRequest",
-      },
-      cache: "no-store",
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("badge_state_failed");
-        }
-        return response.json();
-      })
-      .then((payload) => {
-        const hasUnread = Boolean(payload && payload.success && payload.has_unread);
-        dot.style.display = hasUnread ? "block" : "none";
-      })
-      .catch(() => {
-      });
-  })();
-</script>
-
-<!-- نظام التنبيهات الموحّد SweetAlert2 (متاح لكل صفحات العميل) -->
+<script src="/That-Copy/Public/js/realtime-badges.js"></script>
+<!-- sweet alert -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="/That-Copy/Public/js/sweet-alerts.js"></script>

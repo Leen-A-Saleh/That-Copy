@@ -144,7 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 $stmt = $conn->prepare("
-    SELECT u.user_id, u.name,
+    SELECT u.user_id, u.name, u.has_guardian,
            last_msg.content   AS last_content,
            last_msg.type      AS last_type,
            last_msg.sent_at   AS last_sent_at,
@@ -199,7 +199,7 @@ if (!$selected_id && !empty($conversations)) {
 $selected_user = null;
 $messages      = [];
 if ($selected_id) {
-  $stmt = $conn->prepare("SELECT user_id, name FROM users WHERE user_id = ? AND role = 'CLIENT'");
+  $stmt = $conn->prepare("SELECT user_id, name, has_guardian FROM users WHERE user_id = ? AND role = 'CLIENT'");
   $stmt->bind_param("i", $selected_id);
   $stmt->execute();
   $selected_user = $stmt->get_result()->fetch_assoc();
@@ -368,6 +368,9 @@ function msgTime($datetime)
                   <div class="avatar"><?= htmlspecialchars(initials($c['name'])) ?></div>
                   <div class="chat-user-text">
                     <h4>
+                      <?php if (!empty($c['has_guardian'])): ?>
+                        <span class="minor-badge"><i class="fa-solid fa-user-shield"></i> تحت إشراف ولي أمر</span>
+                      <?php endif; ?>
                       <?= htmlspecialchars($c['name']) ?>
                       <?php if ($unread > 0): ?>
                         <span class="unread-badge"><?= $unread ?></span>
@@ -400,8 +403,18 @@ function msgTime($datetime)
                   <span class="avatar-status"></span>
                 </div>
                 <div class="chat-user-details">
-                  <h3 class="chat-user-name"><?= htmlspecialchars($selected_user['name']) ?></h3>
-                  <p class="chat-user-status">متصل الآن</p>
+                  <h3 class="chat-user-name">
+                    <?php if (!empty($selected_user['has_guardian'])): ?>
+                      <span class="minor-badge"><i class="fa-solid fa-user-shield"></i> تحت إشراف ولي أمر</span>
+                    <?php endif; ?>
+                    <?= htmlspecialchars($selected_user['name']) ?>
+                  </h3>
+                  <p class="chat-user-status">
+                    <?php if (!empty($selected_user['has_guardian'])): ?>
+                      <span style="color:#f59e0b;">(تحت إشراف ولي أمر)</span> • 
+                    <?php endif; ?>
+                    متصل الآن
+                  </p>
                 </div>
               </div>
 
